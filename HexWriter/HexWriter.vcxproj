@@ -145,6 +145,9 @@
     <ClInclude Include="args.h" />
     <ClInclude Include="utilities.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="lorem.bin" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
