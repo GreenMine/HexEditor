@@ -1,11 +1,18 @@
+#define _CRT_SECURE_NO_WARNINGS
+
 #include <stdio.h>
 #include <stdbool.h>
 #include <stdlib.h>
 #include "args.h"
+#include "utilities.h"
 
-#define COMMAND_COUNT 4
+#define COMMAND_COUNT 5
+
+#define TABLE_NUMBERS_COUNT 16
 
 int hex_open(cmd_args_t arguments);
+
+int hex_watch();
 
 int hex_create(cmd_args_t arguments);
 
@@ -20,7 +27,7 @@ struct {
 	const char* description;
 	int (*f)(cmd_args_t arguments);
 } commands[COMMAND_COUNT] = {
-	{'o', "Opening .bin file", hex_open}, {'c', "Create new .bin file", hex_create}, {'e', "Close program", hex_exit}, {'h', "Information about commands", hex_help}
+	{'o', "Opening .bin file", hex_open}, {'w', "Watching file", hex_watch}, {'c', "Create new .bin file", hex_create},  {'h', "Information about commands", hex_help}, {'e', "Close program", hex_exit}
 };
 
 int main() {
@@ -46,9 +53,38 @@ int main() {
 }
 
 int hex_open(cmd_args_t arguments) {
-	printf("Arguments(%d):\n", arguments.count);
-	for (int i = 0; i < arguments.count; i++)
-		printf("[%d] %s\n", i + 1, arguments.arguments[i]);
+	if ((fp = fopen(arguments.arguments[1], "r+b")) == NULL) {
+		printf("File %s is not exists\n", arguments.arguments[1]);
+		return 1;
+	}
+	fseek(fp, 0, SEEK_END);
+	printf("File success opened. Size of file %s: %ldb.\n", arguments.arguments[1], ftell(fp));
+	return 0;
+}
+
+int hex_watch() {
+	if (fp == NULL) {
+		printf("File is not opened. Write 'o filename' to open file.");
+		return 1;
+	}
+	char current_bits, ascii_buffer[TABLE_NUMBERS_COUNT + 1];
+	ascii_buffer[TABLE_NUMBERS_COUNT] = 0x00;
+	int iterator = 0, ascii_iterator = 0;
+	fseek(fp, 0, SEEK_SET);
+	while ((current_bits = fgetc(fp)) != EOF ) {
+		printf("%02X ", current_bits);
+		ascii_buffer[ascii_iterator++] = to_table_format(current_bits);
+		if (!(++iterator % TABLE_NUMBERS_COUNT)) {
+			printf("\t%s\n", ascii_buffer);
+			ascii_iterator = 0;
+			memset(ascii_buffer, '.', TABLE_NUMBERS_COUNT);
+		}
+	}
+
+	for (int i = ascii_iterator; i < TABLE_NUMBERS_COUNT; i++) {
+		printf("00 ");
+	}
+	printf("\t%s\n", ascii_buffer);
 	return 0;
 }
 

@@ -23,5 +23,8 @@
     <ClInclude Include="args.h">
       <Filter>Исходные файлы</Filter>
     </ClInclude>
+    <ClInclude Include="utilities.h">
+      <Filter>Исходные файлы</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
