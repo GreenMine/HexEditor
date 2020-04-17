@@ -60,6 +60,7 @@ int hex_help() {
 	printf("Commands(%d):\n", COMMAND_COUNT);
 	for (int i = 0; i < COMMAND_COUNT; i++)
 		printf("%c - %s\n", commands[i].name, commands[i].description);
+	return 0;
 }
 
 int hex_exit() {
