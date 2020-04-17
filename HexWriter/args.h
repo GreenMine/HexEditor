@@ -22,7 +22,6 @@ cmd_args_t to_pretty_arguments(const char* data) {
 	int iter = 0, symbol_iter = 0;
 	arguments.arguments[0] = alloc_string();
 	for (int i = 0; i < strlen(data); i++) {
-		printf("%c(%d)\n", data[i], data[i]);
 		if (data[i] == ' ') {
 			arguments.arguments[iter][symbol_iter] = 0x00;
 			iter++;

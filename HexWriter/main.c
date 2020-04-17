@@ -11,31 +11,30 @@ int hex_open(cmd_args_t arguments);
 
 int hex_create(cmd_args_t arguments);
 
+int hex_exit();
+
 FILE* fp;
 
 int main() {
 	struct {
 		int command_name; 
 		int (*command_f)(cmd_args_t arguments); /*Функция обработки*/
-	} m[2] = {
-	{ 'o', hex_open }, { 'c', hex_create }};
+	} m[3] = {
+	{'o', hex_open }, {'c', hex_create }, {'e', hex_exit}};
 
-	char opcode;
-	printf("Press enter to start:D");
+	char command_buffer[64] = {0x00};
 	while (true) {
-		getchar();
 		printf("XHE $> ");
-		opcode = getchar();
+		gets(command_buffer);
 		//putchar('\n');
 		for (int i = 0; i < 2; i++) {
-			if (m[i].command_name == opcode) {
-				cmd_args_t cmd = to_pretty_arguments("o t t");
+			if (m[i].command_name == command_buffer[0]) {
+				cmd_args_t cmd = to_pretty_arguments(command_buffer);
 				m[i].command_f(cmd);
 				free_arguments(cmd);
 				break;
 			}
 		}
-		if (opcode == 'e') break;
 	}
 	//_CrtDumpMemoryLeaks();
 	return 0;
@@ -50,5 +49,12 @@ int hex_open(cmd_args_t arguments) {
 
 int hex_create(cmd_args_t arguments) {
 	printf("Arguments for test_2: %s\n", arguments);
+	return 0;
+}
+
+
+int hex_exit() {
+	system("pause");
+	exit(0);
 	return 0;
 }
