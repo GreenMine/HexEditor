@@ -77,13 +77,13 @@ int hex_watch() {
 		if (!(++iterator % TABLE_NUMBERS_COUNT)) {
 			printf("\t%s\n", ascii_buffer);
 			ascii_iterator = 0;
-			memset(ascii_buffer, '.', TABLE_NUMBERS_COUNT);
 		}
 	}
 
 	for (int i = ascii_iterator; i < TABLE_NUMBERS_COUNT; i++) {
 		printf("00 ");
 	}
+	memset(ascii_buffer + ascii_iterator, '.', TABLE_NUMBERS_COUNT - ascii_iterator);
 	printf("\t%s\n", ascii_buffer);
 	return 0;
 }
